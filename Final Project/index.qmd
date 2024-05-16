@@ -1,0 +1,604 @@
+---
+title: "PSCI 3200: Final Project"
+author: "Insha Lakhani"
+institute: "University of Pennsylvania"
+date: 2024-04-30
+toc: true
+format: 
+  html:
+    self-contained: true
+editor: source
+execute:
+  echo: false
+  warning: false
+bibliography: references.bib
+---
+
+
+### Introduction
+
+Partisanship, or strong allegiance to one's own political party, often colors how individuals interpret news and information, particularly in highly charged political environments. With state apparatuses being used to spread misinformation and manipulate public opinion, online echo chambers gain a new form of legitimacy as a valid news source. This study aims to delve into how an individual's partisanship affects their trust in social media as a news source, shedding light on the dynamics that fuel the spread of misinformation through digital channels.
+
+As of 2019, India had the largest number of Facebook and WhatsApp users in the world [@singh2019]. This, combined with an increasingly volatile political landscape, makes it a breeding ground for digital media-based misinformation. A 2019 Reuters study found that the levels of trust in social media were significantly higher in India than in other countries that the study focused on (which included the US, UK etc. ). In fact, while *52%* of the population reported trust in Google, *54%* of participants from India reported trusting in WhatsApp.
+[@reuters2019]. This scale makes India by far the best case study to impact of social media on political polarization.
+
+An Oxford Internet Institute study found that WhatsApp was a key channel for spreading disinformation by *both* major political parties during the 2019 national election [@campbellsmith2019].  It is estimated that, during the May 2018 Karnataka State elections *alone* at least 50,000 election-related WhatsApp groups were created by both the BJP and INC, the two major political parties in India. WhatsApp has emerged as the primary platform affected by disinformation in India, leading to serious societal impacts including the tragic 'WhatsApp killings' [@guardian2019].   
+
+
+Despite the profound impact of WhatsApp, research exploring the influence of social group dynamics on trust and usage of WhatsApp remains scarce. A 2019 study in Chile found a significant positive correlation between the use of WhatsApp for public affairs and political knowledge [@valenzuela2019]. However, it did not establish a consistent relationship between WhatsApp usage and extremity in political opinions or voting intentions. I hypothesize that in India, the dynamics may differ because political parties strategically utilize platforms like WhatsApp. Misinformation campaigns often have a communal or religious slant, targeting specific societal groups. 
+
+
+In the Indian context, research studies mostly focus on measuring the prevalence of misinformation on WhatsApp. I believe this innovates on existing studies in the field because it helps us understand the mechanism through which misinformation is disseminated, rather than its prevalance. 
+By examining the intersection of media trust, political partisanship, and WhatsApp usage in India, this research aims to provide insights into how digital platforms, particularly WhatsApp, are exploited during elections to influence public opinion and propagate partisan beliefs. I hope this could help structure better interventions against misinformation in the future by targetting the root cause of its spread - social media users. 
+
+### Hypothesis
+
+I hypothesize that that partisanship (how strongly individuals identify with and support a political party) impacts how much they trust the political news they encounter on WhatsApp. 
+
+WhatsApp creates a 'truth' effect on its users -  repeated exposure leads them to accept false information as truth due to familiarity [@kanthawala2022echo]. Partisans are likely to be in social networks or groups that predominantly share news confirming their worldview, increasing their trust in such news due to repeated exposure. @badrinathan2021educative, which was an experimental test of a digital literacy intervention, found that BJP supporters might be less capable of identifying misinformation post-treatment than before. They hypothesize that confirmation bias effects might be stronger in Partisans from specific parties. After being educated about misinformation, strong partisans selectively trust news from WhatsApp that reinforces their ideological positions, and only dismissing contrary information as untrustworthy because it comes from 'foreign' sources. This is in line with prior exposure effects in literature about misinformation [@barthwal2024partisanship]. 
+
+@neyazi2021misinformation explored news-seeking behaviors, trust in news, voting intentions, and concerns about misinformation among internet users. They found that partisans are more likely to engage with online news. However, they also discovered that respondents were not divided based on their party identification in their concerns about misinformation.
+
+What differentiates their participants from those in my dataset is that their participants were frequent internet users, with over 74.6% holding graduate or postgraduate degrees. This allows us to infer higher digital literacy and education levels among them, which likely explains their responses.
+
+In contrast, the participants in my dataset have an average graduate/postgraduate education rate of just 37%. @hwang2022education found that misinformation effects were mediated by low issue knowledge, less systematic processing, and dependency on social media. Therefore, I also expect that the lower education level in my dataset will amplify the effect of party affiliation on trust in political news.
+
+
+### Dataset
+The dataset at hand contains 10 different sections with data from 1309 participants surveyed on household characteristics in the state of Bihar, India. The mean age in the dataset is approximately 26.53 years (median age of 24), with the average education level of a High School diploma. The dataset is also, notably, 91.21% Male.
+
+The data was sampled as part of a 'a pedagogical, in-person treatment with educative tools to address fake news in the Indian context' titled 'Educative Interventions to Combat Misinformation' by Sumitra Badrinathan, funded by the Center for the Advanced Study of India (CASI) at the University of Pennsylvania and the Judith Rodin Fellowship. The intervention consisted of 45-60 minute interviews with a survey enumerator. The data I am making use of comes from the 'Pre-treatment Survey' which measured pre-treatment covariates to measure intervention success. This includes demographic data such as age, education and gender and key variables such as media trust and political beliefs. [@badrinathan2021educative]
+
+This dataset is ideal for my research as it provides self-reported judgments regarding individuals' 'intensity' of social media use on WhatsApp and their trust in WhatsApp. Additionally, it measures their 'intensity' of political involvement and attachment to specific political parties.
+
+Furthermore, it includes variables that describe pre-existing civic knowledge and digital literacy, alongside demographic information like age, gender, and education levels. This comprehensive data enables a detailed analysis of the relationship between political partisanship and trust in political news on WhatsApp, while also accounting for other important factors like digital literacy and demographics.
+
+
+#### Understanding the Key Variables
+
+
+| Variable                                  | Mean | Min | Max | Description                                                         |
+|-------------------------------------------|------|-----|-----|---------------------------------------------------------------------|
+| Age                                      | 26.53| 18  | 85  | Respondent Age (Continuous)                                        |
+| Gender                                   | 0.91 | 0   | 1   | Gender (0: Female, 1: Male)                                        |
+| Education                                | 9.14 | 1   | 13  | Education Level (1: 1st or below, 13: Post graduate and above ) |
+| Trust in WhatsApp                        | 2.24 | 1   | 4   | Trust in WhatsApp (1: A great deal of trust, 4: Not much at all)  |
+| Political Party Support                  | - | 1   | 7   | Political Party Support                   |
+| Strength of Support                      | 2.95 | 1   | 5   | Strength of Party Support (1: Extremely Strong, 4: Weak)           |
+| Importance of WhatsApp for Political News| - | 1   | 3   | Importance of WhatsApp (1: Very Important, 3:Not Important)       |
+| Frequency of Forwarding Political News   | 2.35 | 1   | 7   | Frequency of Forwarding Political News (1: Several stories a day, 7: Never) |
+
+
+:::{.callout-note}
+It is important to note that the variables analyzed below contain '98' and '99' as values representing when respondents said they 'Refused to Answer' and 'Don't Know' the answer respectively. While conducting the regression analysis - to ensure that the results were not skewed because of these outlier values - I dropped the rows that stated 'Refused to Answer' because there were overlapping and limited in the dataset (<10 rows). For 'Don't Know' 
+
+I interpreted these responses as 'apathetic' to the variable, since the respondents did not have strong inclinations about the question. For example, in the case of 'Importance of WhatsApp for Political News', I added the 'Don't Know' responses to the 'Not Important' response. 
+:::
+
+I wanted to visualize the existing patterns in the data for my independent and dependent variables.
+
+For variables that are indicators of partisanship, I selected
+
+* `q37`: Which political party do you support?
+* `q38`: How strongly do you support this party?
+
+```{python}
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv('data/data-round1.csv', encoding="latin1")
+row_count = df.shape[0]
+
+strength_labels = {
+    1: 'Extremely Strong',
+    2: 'Strong',
+    3: 'Moderate',
+    4: 'Weak',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+df['strength_description'] = df['q38'].map(strength_labels)
+
+# Recalculate the frequency distribution with the updated labels
+strength_support_frequency_updated = df['strength_description'].value_counts()
+
+# Set up the figure and axes again with updated labels for both plots
+fig, ax = plt.subplots(1, 2, figsize=(6, 6))
+
+# Map the party codes to names using the provided labels
+party_labels = {1: 'BJP', 2: 'Congress', 3: 'RJD', 4: 'JDU', 5: 'HUM', 6: 'Other', 7: 'NOTA', 98: 'Unknown', 99: 'Unknown'}
+df['party_name'] = df['q37'].map(party_labels)
+
+# Recalculate the frequency distribution with the updated names
+party_support_frequency_updated = df['party_name'].value_counts()
+
+
+# Replot the political party support
+party_support_frequency_updated.plot(kind='bar', color='skyblue', ax=ax[0])
+ax[0].set_title('Political Party Support')
+ax[0].set_xlabel('Party')
+ax[0].set_ylabel('Frequency')
+ax[0].grid(True)
+
+# Updated plot for q38 (Strength of Support) with labels
+strength_support_frequency_updated.plot(kind='bar', color='lightcoral', ax=ax[1])
+ax[1].set_title('Strength of Support')
+ax[1].set_xlabel('Strength Description')
+ax[1].set_ylabel('Frequency')
+ax[1].grid(True)
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+```
+
+We see that our data contains a higher level of support for the BJP. We also see that there are a good amount of individuals that claim "Extremely Strong" or atleast "Strong" support for their preferred party. 
+
+To define WhatsApp use (both direct use of WhatsApp and proxies for use of WhatsApp), I intend on using 3 main variables (in translation). I elaborate on their use in the 'Research Design' section.
+
+* `q26`: How much trust and confidence do you have in the political news received on WhatsApp?
+
+* `q24_2`: How important is the use of WhatsApp for news and information on politics?
+
+* `q25`: How often do you forward political news that you receive on WhatsApp?
+
+
+```{python}
+import seaborn as sns
+import matplotlib.pyplot as plt
+# Map labels for the variables q24_2, q25, and q26
+q24_2_labels = {
+    1: 'Not Important',
+    2: 'Slightly Important',
+    3: 'Moderately Important',
+    4: 'Important',
+    5: 'Very Important',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+q25_labels = {
+    1: 'Several stories a day',
+    2: 'A few times a day',
+    3: 'Once a day',
+    4: 'A few times a week',
+    5: 'Once a week',
+    6: 'Less frequently than once a week',
+    7: 'Never',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+q26_labels = {
+    1: 'A great deal',
+    2: 'A moderate amount',
+    3: 'Not much',
+    4: 'Not at all',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+
+# Mapping descriptions to each variable
+df['q24_2_description'] = df['q24_2'].map(q24_2_labels)
+df['q25_description'] = df['q25'].map(q25_labels)
+df['q26_description'] = df['q26'].map(q26_labels)
+
+# Creating plots
+fig, ax = plt.subplots(1, 3, figsize=(12, 6),)
+
+# Plot for q24_2 (Importance of WhatsApp for Political News)
+q24_2_frequency = df['q24_2_description'].value_counts()
+q24_2_frequency.plot(kind='bar', color='skyblue', ax=ax[0])
+ax[0].set_title('Importance of WhatsApp for Political News')
+ax[0].set_xlabel('Importance Level')
+ax[0].set_ylabel('Frequency')
+ax[0].grid(True)
+
+# Plot for q25 (Frequency of Forwarding Political News on WhatsApp)
+q25_frequency = df['q25_description'].value_counts()
+q25_frequency.plot(kind='bar', color='lightgreen', ax=ax[1])
+ax[1].set_title('Frequency of Forwarding Political News on WhatsApp')
+ax[1].set_xlabel('Frequency Level')
+ax[1].set_ylabel('Frequency')
+ax[1].grid(True)
+
+# Plot for q26 (Trust in Political News on WhatsApp)
+q26_frequency = df['q26_description'].value_counts()
+q26_frequency.plot(kind='bar', color='lightcoral', ax=ax[2])
+ax[2].set_title('Trust in Political News on WhatsApp')
+ax[2].set_xlabel('Trust Level')
+ax[2].set_ylabel('Frequency')
+ax[2].grid(True)
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+
+```
+
+
+### Research Design
+
+#### Regression 
+
+To test my hypothesis, I intend to start off with this standard linear regression model:
+
+$$
+\text{Trust}_{\text{WhatsApp}} = \beta_0 + \beta_1 \text{PartyAffiliation} + \beta_2 \text{PartySupportStrength} + \beta_3 \text{Education} + 
+\beta_4 \text{Age}
+$$ 
+
+where:
+
+- $\text{Trust}_{\text{WhatsApp}}$ is the dependent variable representing the level of trust in political news on WhatsApp.
+- $\text{PartyAffiliation}$ is a set of dummy variables for the political party the respondent supports.
+- $\text{PartySupportStrength}$ is an ordinal variable for the strength of support for the party.
+- $\text{Education}$ is an ordinal variable for the highest education level of the respondent.
+- $\text{Age}$ is a continuous variable representing the age of the respondent.
+- $\beta_0$ is the intercept.
+- $\epsilon$ is the error term.
+
+In this specific regression analysis, a positive  $\epsilon$ would support the hypothesis that individuals affiliated with certain parties (e.g., BJP supporters) have higher trust.
+
+#### Analysing relationships
+
+I visualized the most primary element I am attempting to analyze Trust in WhatsApp News vs. Strength of Party Support. The results, surprisingly, strongly support my hypothesis! 86.77% of the people that have 'Extremely Strong' levels of party support also have a 'Great deal of trust' in parties. 
+
+A heatmap was an optimal choice for this analysis because it effectively illustrates the distribution and intensity of responses across both the categorical variables I was looking at.
+
+```{python}
+import seaborn as sns
+
+# Define mappings for more meaningful descriptions
+party_labels = {
+    1: 'BJP',
+    2: 'Congress',
+    3: 'RJD',
+    4: 'JDU',
+    5: 'HUM',
+    6: 'Other',
+    7: 'NOTA',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+
+strength_labels = {
+    1: 'Extremely Strong',
+    2: 'Strong',
+    3: 'Moderate',
+    4: 'Weak',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+
+trust_labels = {
+    1: 'A great deal of trust',
+    2: 'Moderate amount',
+    3: 'Not much',
+    4: 'None at all',
+    98: 'Don’t know',
+    99: 'Refused'
+}
+
+# Assuming 'df' is your DataFrame
+# Apply these mappings to your DataFrame
+df['Party'] = df['q37'].map(party_labels)
+df['Support Strength'] = df['q38'].map(strength_labels)
+df['Trust in WhatsApp'] = df['q26'].map(trust_labels)
+
+# Convert 'Support Strength' to a categorical type with ordered factors
+support_strength_order = ['Extremely Strong', 'Strong', 'Moderate', 'Weak', 'Don’t know', 'Refused']
+df['Support Strength'] = pd.Categorical(df['Support Strength'], categories=support_strength_order, ordered=True)
+
+# Create a new DataFrame for heatmap data
+df_heatmap = df.groupby(['Party', 'Support Strength', 'Trust in WhatsApp']).size().reset_index(name='counts')
+
+# Pivot to get the right shape for the heatmap
+heatmap_data = df_heatmap.pivot_table(values='counts', index='Trust in WhatsApp', columns='Support Strength', fill_value=0)
+
+# Normalize by row to get percentages
+total_counts = heatmap_data.sum(axis=1)
+heatmap_data = heatmap_data.divide(total_counts, axis=0) * 100
+
+# Create the heatmap
+plt.figure(figsize=(8, 8))
+sns.heatmap(heatmap_data, annot=True, fmt='.2f', cmap='Blues', cbar_kws={'label': 'Percentage (%)'})
+plt.title('Trust in WhatsApp News vs. Strength of Party Support')
+plt.xlabel('Strength of Party Support')
+plt.ylabel('Trust in WhatsApp News')
+plt.xticks(rotation=45)  # Rotate column labels for better readability
+plt.figtext(0.1, -0.05, '''Figure: Trust in WhatsApp News vs. Strength of Party Support. This heatmap shows the relationship between respondent's trust in political news on WhatsApp 
+and their level of support for a particular political party. 
+The data is represented as percentages across the categories.''')
+
+plt.tight_layout()
+plt.show()
+
+
+```
+
+
+#### Crafting an 'Index' for the Dependent Variable
+
+Trust in WhatsApp for political news $\text{Trust}_{\text{WhatsApp}}$ is a complex phenomenon that cannot be fully captured by a single variable. We already know from our 'Key Variables' table, that while `Trust in WhatsApp` and `Importance of Political News on WhatsApp` have an average mean that indicates 'moderate importance', the average interviewee in this sample set still forwards politial news on Whatsapp with an average of more than one time per day. 
+
+By creating an index, I incorporate multiple facets of trust and usage, including the general trust in political news (q26), the importance of WhatsApp for political news (q24_2), and the frequency of forwarding political news on WhatsApp (q25). In this way, I include 'passive' views of WhatsApp as well as 'active' actions to 'share' information (albeit still self-reported). 
+
+I first plotted out a correlation matrix to understand the relationships between the three variables.
+
+| Variable | Trust in Political News on WhatsApp (`q26`) | Importance of WhatsApp for Political News (`q24_2`) | Frequency of Forwarding Political News (`q25`) |
+|----------|--------------------------------------------|---------------------------------------------------|------------------------------------------------|
+| `q26`    | 1.000000                                   | 0.343409                                          | 0.520145                                        |
+| `q24_2`  | 0.343409                                   | 1.000000                                          | 0.430391                                        |
+| `q25`    | 0.520145                                   | 0.430391                                          | 1.000000                                        |
+
+
+I found that Trust in Political News on WhatsApp is positively associated with both the frequency of forwarding political news and the perceived importance of WhatsApp for political news.
+
+I decided on using a z-score so each of these important variables contribute equally to the index, while enhancing the interpretability of the index. This also reduces the influence of outliers by focusing on relative positions within the distribution instead. 
+
+```{python}
+
+from sklearn.preprocessing import StandardScaler
+
+# Select the relevant columns for creating the index variable
+relevant_columns = ['q26', 'q24_2', 'q25']
+df_subset = df[relevant_columns]
+
+# Standardize the variables
+scaler = StandardScaler()
+df_standardized = scaler.fit_transform(df_subset)
+
+# Create the index by averaging the standardized variables
+df['WhatsApp_Trust_Index'] = df_standardized.mean(axis=1)
+
+plt.figure(figsize=(10, 6))
+plt.hist(df['WhatsApp_Trust_Index'], bins=30, color='blue', edgecolor='black', alpha=0.7)
+plt.title('Distribution of WhatsApp Trust Index (Z-Score)')
+plt.xlabel('WhatsApp Trust Index (Z-Score)')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.show()
+
+
+```
+
+We can see from the plot above that the histogram is highly skewed to the right, with the majority of the z-scores clustered around 0. This indicates that most individuals in the dataset have trust levels in WhatsApp for political news that are close to the average. The average person in the dataset has moderate trust in WhatsApp, across all 3 of our selected outcome variables.
+
+The right skewness suggests that while a significant portion of the population holds moderate trust, there are fewer individuals who either highly trust or distrust WhatsApp for political news. This pattern may reflect a general trend of cautious trust, where individuals are not overwhelmingly confident but still rely on WhatsApp as a significant source of political information.
+
+#### Findings
+
+
+```{python}
+import statsmodels.api as sm
+from statsmodels.iolib.summary2 import summary_col
+import numpy as np
+
+# Clean the data by removing rows with values 98 and 99 for specified columns
+columns_to_clean = ['q25', 'q24_2', 'q26']
+for col in columns_to_clean:
+    df = df[~df[col].isin([98, 99])]
+
+# Calculate means of cleaned columns
+mean_values = {col: df[col].mean() for col in columns_to_clean}
+
+# Calculate correlations between the variables
+correlations = df[columns_to_clean].corr()
+
+# Standardize the variables
+scaler = StandardScaler()
+df_standardized = scaler.fit_transform(df[columns_to_clean])
+
+# Create the index by averaging the standardized variables
+df['WhatsApp_Trust_Index'] = df_standardized.mean(axis=1)
+
+# Define independent variables for regression models
+independent_vars = ['q37', 'q38', 'q13', 'q9']  # Adjust based on correct column names for Education and Age
+X = df[independent_vars]
+X = sm.add_constant(X)
+
+# Handle missing values in independent variables
+X = X.replace([np.inf, -np.inf], np.nan)
+X = X.fillna(X.mean())
+
+# Define dependent variables for the models
+y_index = df['WhatsApp_Trust_Index']
+y_q25 = df['q25']
+y_q24_2 = df['q24_2']
+y_q26 = df['q26']
+
+# Handle missing values in dependent variables
+y_index = y_index.replace([np.inf, -np.inf], np.nan).fillna(y_index.mean())
+y_q25 = y_q25.replace([np.inf, -np.inf], np.nan).fillna(y_q25.mean())
+y_q24_2 = y_q24_2.replace([np.inf, -np.inf], np.nan).fillna(y_q24_2.mean())
+y_q26 = y_q26.replace([np.inf, -np.inf], np.nan).fillna(y_q26.mean())
+
+# Verify no NaNs or infinite values exist
+assert not X.isnull().values.any(), "X contains NaNs"
+assert not np.isinf(X).values.any(), "X contains infinite values"
+assert not y_index.isnull().values.any(), "y_index contains NaNs"
+assert not np.isinf(y_index).values.any(), "y_index contains infinite values"
+assert not y_q25.isnull().values.any(), "y_q25 contains NaNs"
+assert not np.isinf(y_q25).values.any(), "y_q25 contains infinite values"
+assert not y_q24_2.isnull().values.any(), "y_q24_2 contains NaNs"
+assert not np.isinf(y_q24_2).values.any(), "y_q24_2 contains infinite values"
+assert not y_q26.isnull().values.any(), "y_q26 contains NaNs"
+assert not np.isinf(y_q26).values.any(), "y_q26 contains infinite values"
+
+# Fit regression models
+model_index = sm.OLS(y_index, X).fit()
+model_q25 = sm.OLS(y_q25, X).fit()
+model_q24_2 = sm.OLS(y_q24_2, X).fit()
+model_q26 = sm.OLS(y_q26, X).fit()
+
+# Create summary table
+summary_table = summary_col([model_index, model_q25, model_q24_2, model_q26],
+                            stars=True,
+                            model_names=['Index', 'q25', 'q24_2', 'q26'],
+                            info_dict={'R-squared': lambda x: "{:.2f}".format(x.rsquared),
+                                       'No. observations': lambda x: "{0:d}".format(int(x.nobs))})
+
+```
+
+|                      | Index         | q25           | q24_2         | q26           |
+|----------------------|---------------|---------------|---------------|---------------|
+| **const**            | -0.0783       | 2.5854***     | 1.9334***     | 1.8904***     |
+|                      | (0.1057)      | (0.2128)      | (0.0773)      | (0.1085)      |
+| **q37**              | 0.0080***     | 0.0221***     | 0.0010        | 0.0069***     |
+|                      | (0.0019)      | (0.0039)      | (0.0014)      | (0.0020)      |
+| **q38**              | 0.0116        | 0.0103        | 0.0090        | 0.0103        |
+|                      | (0.0080)      | (0.0160)      | (0.0058)      | (0.0082)      |
+| **q13**              | 0.0023        | -0.0022       | -0.0098       | 0.0207**      |
+|                      | (0.0084)      | (0.0169)      | (0.0061)      | (0.0086)      |
+| **q9**               | 0.0006        | -0.0108**     | 0.0018        | 0.0043*       |
+|                      | (0.0024)      | (0.0049)      | (0.0018)      | (0.0025)      |
+| **R-squared**        | 0.0158        | 0.0305        | 0.0051        | 0.0177        |
+| **R-squared Adj.**   | 0.0126        | 0.0274        | 0.0019        | 0.0145        |
+| **No. observations** | 1236          | 1236          | 1236          | 1236          |
+
+Standard errors in parentheses.
+* p<.1, ** p<.05, *** p<.01
+
+
+The results of the regression model test support the hypothesis that increased party affiliation is positively correlated with trust in political news on WhatsApp. The effect is small but statistically significant, indicating a modest relationship. 
+
+For our key independent variable of party affiliation `q37`, we see that the coefficient for party affiliation is 0.0080 and is statistically significant at the 1% level., This effect is relatively small, but it still indicates a modest relationship between party affiliation and the overall trust in WhatsApp for political news.
+
+We can further break down the effects of `q37` on our independent outcome variables. 
+
+* We see that the coefficient for explicit party affiliation is 0.0221 and is statistically significant at the 1% level. This suggests that higher party affiliation is associated with a higher frequency of forwarding political news on WhatsApp. This is a small but still encouraging effect size. 
+
+* We also see a statistically significant result for `q26` which indicates that higher party affiliation is associated with increased trust in political news on WhatsApp. The effect size is small, suggesting a modest relationship. 
+
+* We find no strong relationship between party affiliation and the perceived importance of WhatsApp for political news.
+
+Intuitively, we can interpret this as a moderate correlation. We see that political association to certain parties makes individuals more likely to forward political news on WhatsApp, and believe the news they encounter on the platform. However, they do not consciously consider WhatsApp an important source of political news. 
+
+We see that, unlike our visual hypothesis test with our heatmap, `q38` (Strength of Party Support) is not statistically significant for any of the 4 models. We see that the coefficient for `q38` is positive in all models but very small, indicating that the effect of strength of party support on the dependent variables is minimal. I guess that this effect occurs because strength of party support does not vary much among the participants. From our initial graph of the distribution of `q38` it is easy to see that there’s not enough difference in responses to show a clear relationship with the dependent variables.
+
+In terms of our covariates, we also find that older individuals are less likely to forward political news frequently, whereas they also trust WhatsApp as a news source more. However, we find that education is significant in the `q26` model (0.0207, p<0.05). The positiive  (albeit small) co-efficient suggests that higher education levels are associated with moderately increased trust in political news on WhatsApp. We could be seeing this effect because of how our dataset is structured and sampled. In rural areas, those with higher education standards are associated with a higher socio-economic background, and therefore more likely to have access to digital devices such a phones. This implies the presence of other confounders that could be affecting this result. Investigating the impact of confounders on our covariates is out of the scope of this project, but suggests strongly that more information is required in this area.
+
+
+#### Potential Issues with the Research Design
+
+One of the most significant issues with this study so far is the implication of reverse causality. In the theory we established in the 'Introduction' and 'Hypothesis' sections, we understood that polarization can affect how much echo chambers like WhatsApp appeal to you. participation in online echo chambers may exacerbate polarization, creating a feedback loop that complicates the attribution of cause and effect [@hobolt2023polarizing]. This poses a considerable challenge for establishing one-directional causality.
+
+In the context of an empirical study with a limited dataset, isolating this effect without structured interviews or longitudinal data is particularly challenging. 
+
+To help understand the effects of time, we can use `q14` as a proxy variable. The variable `q14`, which queries respondents about how long they have had access to the internet, can serve as a proxy for early exposure to digital platforms like WhatsApp. By establishing a timeline of access, we can begin to infer the potential for earlier exposure to influence later behaviors and attitudes towards political content on WhatsApp.
+
+While `q6` asks respondents about the duration of WhatsApp usage within the family over the past year, its scope is too limited to provide a comprehensive view. Through additional exploratory data analysis, I found that most respondents indicate having used WhatsApp throughout the past year. This is one of three options to indicate whether WhatsApp has been used for more than a month, more than 6 months or more than a year. This offers little variability that could produce any signficant analysis - which is why I am choosing to dive deeper mainly into the effects of `q14` because it generalizes over a longer time period. This limitation underscores the need for more granular data over a longer timeline to better assess the impact of prolonged exposure to WhatsApp on political polarization.
+
+#### Empirical Extension
+
+My approach is to restrict the dataset to individuals who have had internet access for a shorter amount of time and create two subsets of our dataset - 'long exposure' and 'short exposure'. I defined 'long exposure' as any exposure over the 'mean' exposure limit of the group - this was an average of 1 year on the internet. I repeated the Regression Test analysis for each subset. I present the model summaries, and a tabular analysis of difference in outcomes below. 
+
+
+```{python}
+mean_duration = df['q14'].mean()
+
+# Create subsets of the data
+df_short_exposure = df[df['q14'] <= mean_duration]
+df_long_exposure = df[df['q14'] > mean_duration]
+
+# Function to perform the regression analysis and return the summary
+def analyze_subset(data_subset, dependent_vars, independent_vars):
+    X_subset = data_subset[independent_vars]
+    X_subset = sm.add_constant(X_subset)  # add a constant to the model
+    X_subset = X_subset.fillna(X_subset.mean())  # Handle missing values
+    results = {}
+    for var in dependent_vars:
+        y_subset = data_subset[var].fillna(data_subset[var].mean())  # Handle missing values in dependent variable
+        model = sm.OLS(y_subset, X_subset).fit()
+        results[var] = model.summary()
+    return results
+
+# Conduct analysis for both groups
+results_short_exposure = analyze_subset(df_short_exposure, ['WhatsApp_Trust_Index', 'q25', 'q24_2', 'q26'], independent_vars)
+results_long_exposure = analyze_subset(df_long_exposure, ['WhatsApp_Trust_Index', 'q25', 'q24_2', 'q26'], independent_vars)
+
+# You can now examine the results to see the effect of the duration of internet access on political polarization and trust
+```
+
+
+**Short Exposure to Internet Effects**
+
+|                      | Index         | q25           | q24_2         | q26           |
+|----------------------|---------------|---------------|---------------|---------------|
+| **const**            | -0.0648       | 2.5503***     | 1.9393***     | 1.9327***     |
+|                      | (0.122)       | (0.219)       | (0.095)       | (0.122)       |
+| **q37**              | 0.0099*       | 0.0206**      | 0.0044        | 0.0074        |
+|                      | (0.005)       | (0.008)       | (0.004)       | (0.005)       |
+| **q38**              | 0.0098        | 0.0063        | 0.0088        | 0.0082        |
+|                      | (0.008)       | (0.014)       | (0.006)       | (0.008)       |
+| **q13**              | -0.0236*      | -0.0411*      | -0.0184*      | -0.0105       |
+|                      | (0.010)       | (0.017)       | (0.008)       | (0.010)       |
+| **q9**               | 0.0037        | -0.0034       | 0.0024        | 0.0072*       |
+|                      | (0.003)       | (0.005)       | (0.002)       | (0.003)       |
+
+Standard errors in parentheses.
+* p<.1, ** p<.05, *** p<.01
+
+**Long Exposure to Internet Effects**
+
+|                      | Index         | q25           | q24_2         | q26           |
+|----------------------|---------------|---------------|---------------|---------------|
+| **const**            | 0.0950        | 2.7002***     | 2.0732***     | 2.0555***     |
+|                      | (0.234)       | (0.599)       | (0.162)       | (0.243)       |
+| **q37**              | 0.0045*       | 0.0180***     | -0.0009       | 0.0030        |
+|                      | (0.002)       | (0.005)       | (0.001)       | (0.002)       |
+| **q38**              | 0.0541        | 0.1979        | -0.0197       | 0.0588        |
+|                      | (0.068)       | (0.174)       | (0.047)       | (0.070)       |
+| **q13**              | 0.0266        | 0.0416        | -0.0038       | 0.0489**      |
+|                      | (0.016)       | (0.040)       | (0.011)       | (0.016)       |
+| **q9**               | -0.0059       | -0.0266*      | 0.0005        | -0.0015       |
+|                      | (0.004)       | (0.011)       | (0.003)       | (0.004)       |
+
+
+Standard errors in parentheses.
+* p<.1, ** p<.05, *** p<.01
+
+**Comparison of Results**
+
+We see that the impact of demographic and political variables on trust in WhatsApp for political content appears to be moderated by the duration of internet exposure. However, we notably see that longer exposure to internet might dilute the impact of party affiliation on WhatsApp trust. We also see that for individuals that have spent more time on the internet and have stronger party support, there is a stronger correlation with how frequently they 'forward' political news on WhatsApp. 
+
+The most interesting comparison is under the variable `q13`. Education consistently shows a negative trend, suggesting it might serve as a buffer reducing susceptibility to influence through platforms like WhatsApp. 
+
+However, we see a similar relationship between short term and long term exposure in terms of all of our 'key' variables that analyze partisanship. 
+
+
+| Variable                     | Short Exposure                                                                                                          | Long Exposure                                                                                                                |
+|------------------------------|----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| **Constants**                | The constant across all dependent variables suggests baseline levels that are fairly consistent and positive.              | Constants are positive but slightly higher than in the short exposure group, indicating a higher baseline response.             |
+| **q37 (Party Affiliation)**  | Coefficients are generally positive, with significant effects on the Index and q25, suggesting a positive relationship.    | Effects are more muted with significance dropping in many models except for q25, indicating that longer exposure might dilute the direct impact. |
+| **q38 (Strength of Party Support)** | Effects are positive but mostly not significant, indicating limited direct impact on the trust metrics.                    | The coefficient in q25 is notably higher, suggesting that over time, stronger party support may be more related to specific trust aspects like q25. |
+| **q13 (Education)**          | Negative coefficients, significant in most models except q26, suggesting that higher education levels might reduce trust.  | The direction is mixed, with some models showing negative effects, indicating variable impacts with longer internet exposure.   |
+| **q9 (Age)**                 | Mixed effects, with only q26 showing significant positive correlation, suggesting older respondents trust WhatsApp more.   | Mostly non-significant, with a negative effect on q25, indicating that age might slightly reduce the frequency of forwarding political news with more prolonged exposure. |
+
+
+#### Policy Implications of Findings
+
+The results support the hypothesis that there is a positive correlation between party affiliation and trust in political news on WhatsApp, although the effect size is small.  We must establish however, that these findings are indicative rather than definitive. 
+
+The main reason for this was that the data used in this study is observational, not experimental. We also did not eliminate entirely the potential confounder that is reverse causality.  In a cross-sectional study like this, where data is collected at a single point in time, establishing temporal precedence is inherently difficult. Future research could benefit from a longitudinal design to track changes over time - testing this research design could help produce insights, for example, within a rural environment where internet access is a relatively new concept. 
+
+We find that the most statistically significant (though still moderate) effect on Trust in WhatsApp is Party Affiliation. Individuals associated with specific parties are more likely to spread and trust in news that have received on online resources such as WhatsApp. In the Indian context, monitoring and reprimanding political parties that engage in misinformation spread online has been met with few concrete policy solutions [@chaturvedi2016troll]. 
+
+Fact-checking organizations can play a critical role in verifying news stories and educating people about fake news. These organizations need to be encouraged and supported by the government and media. The 'fact check' unit of the Press Information Bureau (PIB) busted 1,160 cases of false information since its inception in November 2019. Government-led initiatives to integrate and promote these organizations in social media platforms, such as the formation of 'Government monitored WhatsApp Information groups' enable real-time checking of content as it spreads. At the same time, stronger legal frameworks that hold parties accountable when they are found to deliberately disseminate false information can prove useful, especially during election years.  
+
+However, a significant challenge to these policy recommendations is the political dynamics involved, particularly with the incumbent party, the BJP, which has been frequently accused of spreading misinformation itself. This situation complicates the enforcement of such policies, as it raises concerns about impartiality and the potential misuse of regulatory mechanisms to suppress dissent or criticism.
+
+The most productive contributions can come from local, grassroots organizations. FactShala, a collaborative and multi-stakeholder media literacy network pioneered by over 250 journalists and experts who run tailored workshops in over 15 languages collaborated with Google. Google's "About This Result" feature combats misinformation by allowing users to assess information and understand its source on the internet and was translated into 8 different local Indian languages.
+
+Our results more clearly indicated that individuals in our dataset are 'passive' spreaders of misinformation. They do not believe explictly that the purpose of WhatsApp is to spread political information - but they frequently forward political news on the app and highly trust in it anyways. Policy interventions can encourage Social Media apps to add 'digital nudges' to alleviate 'mindless activity' [@purohit2021unhooked]. We can add disclaimers before allowing individuals to forward news such as "Are you sure you want to share this article, it's source cannot be verified." This allows people to engage in 'Reasoned action' without compromising on otherwise sensitive issues with free speech and monitoring [@recognizemisinformation2019]. 
+
+Effective policy measures will require a balanced approach, innovative technology solutions, and inclusive educational initiatives to foster a media-savvy citizenry capable of navigating the complexities of the information age. 
+
+
+### Code + Data
+The Quarto files and Data can be accessed [here](https://drive.google.com/drive/folders/1OLac1O8Or9tOkI2QXSByemcgphm04Nms?usp=drive_link)
+
+This is how I felt during most of this analysis [here](https://www.instagram.com/reel/C5WzuDZO8m0/?igsh=MXQ4c3ZhcXZoNTV0Zw==)
+
+### References
+::: {#refs}
+:::
