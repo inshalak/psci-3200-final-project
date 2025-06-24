@@ -22,7 +22,7 @@ jobs:
             const issue = context.payload.issue;
             const label = context.payload.label;
             
-            if (label.name !== 'need-ondemand-validation') {
+            if (label.name !== 'Need On Demand and Validity Checks') {
               return;
             }
             
