@@ -5,6 +5,10 @@ on:
   issues:
     types: [labeled]
 
+permissions:
+  issues: write
+  contents: read
+
 jobs:
   create-test-issue:
     runs-on: ubuntu-latest
@@ -31,7 +35,9 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'test',
-              body: `This is a test issue created automatically. Related to issue #${issue.number}: ${issue.title}`,
+              body: `This is a test issue created automatically.
+
+              Related to issue #${issue.number}: ${issue.title}`,
               labels: ['auto-created']
             });
             
