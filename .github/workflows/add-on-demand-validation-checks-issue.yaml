@@ -1,8 +1,9 @@
 name: Create Test Issue
 
 on:
-  project_card:
-    types: [moved]
+  workflow_dispatch:
+  issues:
+    types: [labeled]
 
 jobs:
   create-test-issue:
@@ -14,45 +15,24 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const card = context.payload.project_card;
+            const issue = context.payload.issue;
+            const label = context.payload.label;
             
-            const column = await github.rest.projects.getColumn({
-              column_id: card.column_id
-            });
-            
-            if (column.data.name !== 'Need to add in On-Demand/Validation Checks') {
-              console.log(`Card not in target column. Current: ${column.data.name}`);
+            // Trigger when a specific label is added
+            if (label.name !== 'need-ondemand-validation') {
+              console.log(`Not the target label. Added: ${label.name}`);
               return;
             }
             
+            console.log(`Processing issue #${issue.number}: ${issue.title}`);
+            
+            // Create the test issue
             const newIssue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'test',
-              body: 'This is a test issue created automatically.',
+              body: `This is a test issue created automatically. Related to issue #${issue.number}: ${issue.title}`,
               labels: ['auto-created']
             });
             
             console.log(`Created test issue #${newIssue.data.number}`);
-            
-            const project = await github.rest.projects.getProject({
-              project_id: column.data.project_id
-            });
-            
-            const columns = await github.rest.projects.listColumns({
-              project_id: project.data.id
-            });
-            
-            const todoColumn = columns.data.find(col => col.name === 'Todo');
-            
-            if (todoColumn) {
-              await github.rest.projects.createCard({
-                column_id: todoColumn.id,
-                content_id: newIssue.data.id,
-                content_type: 'Issue'
-              });
-              
-              console.log(`Added issue to Todo column`);
-            } else {
-              console.log('Todo column not found');
-            }
