@@ -1,4 +1,4 @@
-name: Create Test Issue
+name: Create On Demand and Validity Checks Issue
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Create On Demand Validation Test Issue 
+      - name: Create On Demand and Validity Checks Issue 
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -22,7 +22,7 @@ jobs:
             const issue = context.payload.issue;
             const label = context.payload.label;
             
-            if (label.name !== 'Need On Demand and Validity Checks') {
+            if (label.name !== 'Needs On Demand and Validity Checks') {
               return;
             }
             
@@ -32,9 +32,8 @@ jobs:
             const newIssue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `Enable on-demand validation for ${tokenName}`,
-              body: `## On-Demand Validation Task
-
+              title: `Enable On-Demand and Validity Checks for ${tokenName}`,
+              body: `
               **Original Issue:** #${issue.number}
               **Token:** ${tokenName}
 
@@ -50,5 +49,6 @@ jobs:
               **Auto-created from:** ${issue.title}`,
                             labels: ['auto-created', 'on-demand-validation']
                           });
+              
                           
                         
