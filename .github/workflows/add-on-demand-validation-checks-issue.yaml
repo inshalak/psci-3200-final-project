@@ -52,7 +52,7 @@ jobs:
               - \`ts/partnervalidation/validators/config/config.go\`
 
               **Auto-created from:** ${issue.title}`,
-                            labels: ['auto-created', 'on-demand-validation']
+                            labels: ['auto-created', 'on-demand-validation'],
                             assignees: ['Copilot']
                           });
               
