@@ -41,6 +41,7 @@ jobs:
               body: `
               **Original Issue:** #${issue.number}
               **Token:** ${tokenName}
+              Assign this issue to Copilot
 
               ### Implementation Steps:
               - [ ] Edit \`config.go\` file to add:
@@ -53,7 +54,6 @@ jobs:
 
               **Auto-created from:** ${issue.title}`,
                             labels: ['validation-coverage'],
-                            assignees: ['Copilot']
                           });
               
                           
