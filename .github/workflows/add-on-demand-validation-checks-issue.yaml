@@ -28,7 +28,11 @@ jobs:
             }
             
             const tokenMatch = issue.title.match(/Add validator for\s+(.+)$/i);
-            const tokenName = tokenMatch ? tokenMatch[1] : 'UNKNOWN_TOKEN';
+            if (!tokenMatch) {
+              return;
+            }
+            
+            const tokenName = tokenMatch[1];
             
             const newIssue = await github.rest.issues.create({
               owner: context.repo.owner,
