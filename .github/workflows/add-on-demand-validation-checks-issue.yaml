@@ -12,10 +12,10 @@ permissions:
 jobs:
   create-test-issue:
     runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
     
     steps:
       - name: Create On Demand and Validity Checks Issue 
-      - if: github.event_name == 'issues'
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
