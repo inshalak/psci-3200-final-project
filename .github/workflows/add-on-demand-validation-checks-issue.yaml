@@ -38,25 +38,91 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: `Enable On-Demand and Validity Checks for ${tokenName}`,
-              body: `
-              **Original Issue:** #${issue.number}
-              **Token:** ${tokenName}
-              @Copilot 
+              body: `**Original Issue:** #${issue.number}
+            **Token:** ${tokenName}
 
-              ### Implementation Steps:
-              - [ ] Edit \`config.go\` file to add:
-                - [ ] \`WithOnDemandChecksSupportedForTokenTypes("${tokenName}")\`
-                - [ ] \`WithValidityChecksSupportedForTokenTypes("${tokenName}")\`
-                - [ ] Remove \`DisableValidityUpdatesForTokenTypes("${tokenName}")\` if present
+            @Copilot 
 
-              ### Files to Update:
-              - \`ts/partnervalidation/validators/config/config.go\`
+            ### Implementation Steps:
+            - [ ] Edit \`config.go\` file to add:
+              - [ ] \`WithOnDemandChecksSupportedForTokenTypes("${tokenName}")\`
+              - [ ] \`WithValidityChecksSupportedForTokenTypes("${tokenName}")\`
+              - [ ] Remove \`DisableValidityUpdatesForTokenTypes("${tokenName}")\` if present
 
-              **Auto-created from:** ${issue.title}`,
-                            labels: ['validation-coverage'],
-                            assignees: ['github-copilot']
-                          });
-              
+            ### Files to Update:
+            - \`ts/partnervalidation/validators/config/config.go\`
 
-                          
+            **Auto-created from:** ${issue.title}`,
+                          labels: ['validation-coverage']
+                        });
                         
+                        console.log(`Created issue #${newIssue.data.number}`);
+                        
+                        try {
+                          const suggestedActorsQuery = `
+                            query {
+                              repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                                suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
+                                  nodes {
+                                    login
+                                    __typename
+                                    ... on Bot {
+                                      id
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          `;
+                          
+                          const actorsResult = await github.graphql(suggestedActorsQuery);
+                          const copilotBot = actorsResult.repository.suggestedActors.nodes.find(
+                            node => node.login === 'copilot-swe-agent'
+                          );
+                          
+                          if (copilotBot) {
+                            console.log('Found Copilot bot, attempting to assign...');
+                            
+                            const issueQuery = `
+                              query {
+                                repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                                  issue(number: ${newIssue.data.number}) {
+                                    id
+                                  }
+                                }
+                              }
+                            `;
+                            
+                            const issueResult = await github.graphql(issueQuery);
+                            const issueId = issueResult.repository.issue.id;
+                            
+                            const assignMutation = `
+                              mutation {
+                                replaceActorsForAssignable(input: {
+                                  assignableId: "${issueId}", 
+                                  assigneeIds: ["${copilotBot.id}"]
+                                }) {
+                                  assignable {
+                                    ... on Issue {
+                                      id
+                                      title
+                                      assignees(first: 10) {
+                                        nodes {
+                                          login
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            `;
+                            
+                            await github.graphql(assignMutation);
+                            console.log('Successfully assigned issue to Copilot!');
+                          } else {
+                            console.log('Copilot not available in this repository');
+                          }
+                        } catch (error) {
+                          console.log('Failed to assign to Copilot:', error.message);
+                          console.log('Issue created successfully but assignment failed');
+                        }
