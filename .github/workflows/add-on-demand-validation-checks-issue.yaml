@@ -57,6 +57,18 @@ jobs:
             });
 
             try {
+              // First get the user's node ID
+              const userQuery = `
+                query {
+                  user(login: "${context.payload.sender.login}") {
+                    id
+                  }
+                }
+              `;
+              
+              const userResult = await github.graphql(userQuery);
+              const userNodeId = userResult.user.id;
+
               const suggestedActorsQuery = `
                 query {
                   repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
@@ -65,7 +77,6 @@ jobs:
                         login
                         __typename
                         ... on Bot {
-                        
                           id
                         }
                       }
@@ -93,12 +104,12 @@ jobs:
                 const issueResult = await github.graphql(issueQuery);
                 const issueId = issueResult.repository.issue.id;
 
-                // Use GraphQL mutation to assign both users
+                // Use GraphQL mutation to assign both users with node IDs
                 await github.graphql(`
                   mutation {
                     updateIssue(input: {
                       id: "${issueId}",
-                      assigneeIds: ["${copilotBot.id}", "${context.payload.sender.id}"]
+                      assigneeIds: ["${copilotBot.id}", "${userNodeId}"]
                     }) {
                       issue {
                         id
