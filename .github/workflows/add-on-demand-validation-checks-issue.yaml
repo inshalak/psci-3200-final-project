@@ -59,6 +59,7 @@ jobs:
                         console.log(`Created issue #${newIssue.data.number}`);
                         
                         try {
+                          console.log('Starting actor query process...');
                           const suggestedActorsQuery = `
                             query {
                               repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
@@ -76,12 +77,14 @@ jobs:
                           `;
                           
                           const actorsResult = await github.graphql(suggestedActorsQuery);
+                          console.log('Suggested actors query result:', JSON.stringify(actorsResult, null, 2));
+                          
                           const copilotBot = actorsResult.repository.suggestedActors.nodes.find(
                             node => node.login === 'copilot-swe-agent'
                           );
                           
                           if (copilotBot) {
-                            console.log('Found Copilot bot, attempting to assign...');
+                            console.log('Found Copilot bot with details:', JSON.stringify(copilotBot, null, 2));
                             
                             const issueQuery = `
                               query {
@@ -94,7 +97,11 @@ jobs:
                             `;
                             
                             const issueResult = await github.graphql(issueQuery);
+                            console.log('Issue query result:', JSON.stringify(issueResult, null, 2));
                             const issueId = issueResult.repository.issue.id;
+                            
+                            console.log('Attempting to assign with issueId:', issueId);
+                            console.log('Using copilotBot.id:', copilotBot.id);
                             
                             const assignMutation = `
                               mutation {
@@ -117,12 +124,22 @@ jobs:
                               }
                             `;
                             
-                            await github.graphql(assignMutation);
+                            const assignResult = await github.graphql(assignMutation);
+                            console.log('Assignment mutation result:', JSON.stringify(assignResult, null, 2));
                             console.log('Successfully assigned issue to Copilot!');
                           } else {
-                            console.log('Copilot not available in this repository');
+                            console.log('Copilot bot not found in suggested actors.');
+                            console.log('Available actors:', JSON.stringify(actorsResult.repository.suggestedActors.nodes.map(node => node.login), null, 2));
                           }
                         } catch (error) {
-                          console.log('Failed to assign to Copilot:', error.message);
+                          console.log('Error details:', {
+                            message: error.message,
+                            name: error.name,
+                            stack: error.stack,
+                            response: error.response ? {
+                              status: error.response.status,
+                              data: error.response.data
+                            } : 'No response data'
+                          });
                           console.log('Issue created successfully but assignment failed');
                         }
