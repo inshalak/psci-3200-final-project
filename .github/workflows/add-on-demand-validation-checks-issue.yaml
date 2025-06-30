@@ -57,67 +57,48 @@ jobs:
             });
 
             try {
-              // First get the user's node ID
-              const userQuery = `
+              // Query both user and bot IDs in a single request
+              const actorsQuery = `
                 query {
                   user(login: "${context.payload.sender.login}") {
+                    id
+                  }
+                  copilot: user(login: "copilot-swe-agent") {
                     id
                   }
                 }
               `;
               
-              const userResult = await github.graphql(userQuery);
-              const userNodeId = userResult.user.id;
+              const actorsResult = await github.graphql(actorsQuery);
+              const userNodeId = actorsResult.user.id;
+              const copilotNodeId = actorsResult.copilot.id;
 
-              const suggestedActorsQuery = `
+              const issueQuery = `
                 query {
                   repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
-                    suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
-                      nodes {
-                        login
-                        __typename
-                        ... on Bot {
-                          id
-                        }
-                      }
+                    issue(number: ${newIssue.data.number}) {
+                      id
                     }
                   }
                 }
               `;
               
-              const actorsResult = await github.graphql(suggestedActorsQuery);
-              const copilotBot = actorsResult.repository.suggestedActors.nodes.find(
-                node => node.login === 'copilot-swe-agent'
-              );
-              
-              if (copilotBot) {
-                const issueQuery = `
-                  query {
-                    repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
-                      issue(number: ${newIssue.data.number}) {
-                        id
-                      }
-                    }
-                  }
-                `;
-                
-                const issueResult = await github.graphql(issueQuery);
-                const issueId = issueResult.repository.issue.id;
+              const issueResult = await github.graphql(issueQuery);
+              const issueId = issueResult.repository.issue.id;
 
-                // Use GraphQL mutation to assign both users with node IDs
-                await github.graphql(`
-                  mutation {
-                    updateIssue(input: {
-                      id: "${issueId}",
-                      assigneeIds: ["${copilotBot.id}", "${userNodeId}"]
-                    }) {
-                      issue {
-                        id
-                      }
+              // Use GraphQL mutation to assign both users
+              await github.graphql(`
+                mutation {
+                  updateIssue(input: {
+                    id: "${issueId}",
+                    assigneeIds: ["${copilotNodeId}", "${userNodeId}"]
+                  }) {
+                    issue {
+                      id
                     }
                   }
-                `);
-              }
+                }
+              `);
             } catch (error) {
               console.log("Issue created but error assigning users:", error);
             }
