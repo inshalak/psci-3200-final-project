@@ -53,93 +53,62 @@ jobs:
             - \`ts/partnervalidation/validators/config/config.go\`
 
             **Auto-created from:** ${issue.title}`,
-                          labels: ['validation-coverage']
-                        });
-                        
-                        console.log(`Created issue #${newIssue.data.number}`);
-                        
-                        try {
-                          console.log('Starting actor query process...');
-                          const suggestedActorsQuery = `
-                            query {
-                              repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
-                                suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
-                                  nodes {
-                                    login
-                                    __typename
-                                    ... on Bot {
-                                      id
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          `;
-                          
-                          const actorsResult = await github.graphql(suggestedActorsQuery);
-                          console.log('Suggested actors query result:', JSON.stringify(actorsResult, null, 2));
-                          
-                          const copilotBot = actorsResult.repository.suggestedActors.nodes.find(
-                            node => node.login === 'copilot-swe-agent'
-                          );
-                          
-                          if (copilotBot) {
-                            console.log('Found Copilot bot with details:', JSON.stringify(copilotBot, null, 2));
-                            
-                            const issueQuery = `
-                              query {
-                                repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
-                                  issue(number: ${newIssue.data.number}) {
-                                    id
-                                  }
-                                }
-                              }
-                            `;
-                            
-                            const issueResult = await github.graphql(issueQuery);
-                            console.log('Issue query result:', JSON.stringify(issueResult, null, 2));
-                            const issueId = issueResult.repository.issue.id;
-                            
-                            console.log('Attempting to assign with issueId:', issueId);
-                            console.log('Using copilotBot.id:', copilotBot.id);
-                            
-                            const assignMutation = `
-                              mutation {
-                                replaceActorsForAssignable(input: {
-                                  assignableId: "${issueId}", 
-                                  actorIds: ["${copilotBot.id}"]
-                                }) {
-                                  assignable {
-                                    ... on Issue {
-                                      id
-                                      title
-                                      assignees(first: 10) {
-                                        nodes {
-                                          login
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            `;
-                            
-                            const assignResult = await github.graphql(assignMutation);
-                            console.log('Assignment mutation result:', JSON.stringify(assignResult, null, 2));
-                            console.log('Successfully assigned issue to Copilot!');
-                          } else {
-                            console.log('Copilot bot not found in suggested actors.');
-                            console.log('Available actors:', JSON.stringify(actorsResult.repository.suggestedActors.nodes.map(node => node.login), null, 2));
-                          }
-                        } catch (error) {
-                          console.log('Error details:', {
-                            message: error.message,
-                            name: error.name,
-                            stack: error.stack,
-                            response: error.response ? {
-                              status: error.response.status,
-                              data: error.response.data
-                            } : 'No response data'
-                          });
-                          console.log('Issue created successfully but assignment failed');
+              labels: ['validation-coverage'],
+              assignees: [context.payload.sender.login] // Add the person who triggered the label event
+            });
+
+            try {
+              const suggestedActorsQuery = `
+                query {
+                  repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                    suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
+                      nodes {
+                        login
+                        __typename
+                        ... on Bot {
+                          id
                         }
+                      }
+                    }
+                  }
+                }
+              `;
+              
+              const actorsResult = await github.graphql(suggestedActorsQuery);
+              const copilotBot = actorsResult.repository.suggestedActors.nodes.find(
+                node => node.login === 'copilot-swe-agent'
+              );
+              
+              if (copilotBot) {
+                const issueQuery = `
+                  query {
+                    repository(owner: "${context.repo.owner}", name: "${context.repo.repo}") {
+                      issue(number: ${newIssue.data.number}) {
+                        id
+                      }
+                    }
+                  }
+                `;
+                
+                const issueResult = await github.graphql(issueQuery);
+                const issueId = issueResult.repository.issue.id;
+                
+                // Modified to include both Copilot and the label author
+                await github.graphql(`
+                  mutation {
+                    replaceActorsForAssignable(input: {
+                      assignableId: "${issueId}", 
+                      actorIds: ["${copilotBot.id}", "${context.payload.sender.id}"]
+                    }) {
+                      assignable {
+                        ... on Issue {
+                          id
+                        }
+                      }
+                    }
+                  }
+                `);
+              }
+            } catch (error) {
+              console.log("Issue created but error assigning users:", error);
+            }
