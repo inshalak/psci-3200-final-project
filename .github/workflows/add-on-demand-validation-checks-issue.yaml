@@ -107,7 +107,7 @@ jobs:
                               mutation {
                                 replaceActorsForAssignable(input: {
                                   assignableId: "${issueId}", 
-                                  assigneeIds: ["${copilotBot.id}"]
+                                  actorIds: ["${copilotBot.id}"]
                                 }) {
                                   assignable {
                                     ... on Issue {
