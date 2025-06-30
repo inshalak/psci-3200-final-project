@@ -53,8 +53,7 @@ jobs:
             - \`ts/partnervalidation/validators/config/config.go\`
 
             **Auto-created from:** ${issue.title}`,
-              labels: ['validation-coverage'],
-              assignees: [context.payload.sender.login] // Add the person who triggered the label event
+              labels: ['validation-coverage']
             });
 
             try {
@@ -93,18 +92,16 @@ jobs:
                 
                 const issueResult = await github.graphql(issueQuery);
                 const issueId = issueResult.repository.issue.id;
-                
-                // Modified to include both Copilot and the label author
+
+                // Use GraphQL mutation to assign both users
                 await github.graphql(`
                   mutation {
-                    replaceActorsForAssignable(input: {
-                      assignableId: "${issueId}", 
-                      actorIds: ["${copilotBot.id}", "${context.payload.sender.id}"]
+                    updateIssue(input: {
+                      id: "${issueId}",
+                      assigneeIds: ["${copilotBot.id}", "${context.payload.sender.id}"]
                     }) {
-                      assignable {
-                        ... on Issue {
-                          id
-                        }
+                      issue {
+                        id
                       }
                     }
                   }
